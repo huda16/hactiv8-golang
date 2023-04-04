@@ -1,0 +1,127 @@
+basePath: /
+definitions:
+  models.Car:
+    properties:
+      harga:
+        type: integer
+      id:
+        type: integer
+      merk:
+        type: string
+      pemilik:
+        type: string
+      typecars:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: soberkoder@swagger.io
+    name: API Support
+  description: This is a sample service for managing cars
+  termsOfService: http://swagger.io/terms/
+  title: Car API
+  version: "1.0"
+paths:
+  /cars:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all car
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Car'
+      summary: Get details
+      tags:
+      - cars
+    post:
+      consumes:
+      - application/json
+      description: Post details of car corresponding ti the input Id
+      parameters:
+      - description: create car
+        in: body
+        name: models.Car
+        required: true
+        schema:
+          $ref: '#/definitions/models.Car'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Car'
+      summary: Post details for a given Id
+      tags:
+      - cars
+  /cars/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete the order corresponding to the input id
+      parameters:
+      - description: ID of the car to be deleted
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+      summary: Delete car identified by the given id
+      tags:
+      - cars
+    get:
+      consumes:
+      - application/json
+      description: Get details of car corresponding to the input Id
+      parameters:
+      - description: ID of the car
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Car'
+      summary: Get details for a given Id
+      tags:
+      - cars
+    patch:
+      consumes:
+      - application/json
+      description: Update the car corresponding to the input Id
+      parameters:
+      - description: ID of the car to be updated
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: update car
+        in: body
+        name: models.Car
+        required: true
+        schema:
+          $ref: '#/definitions/models.Car'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Car'
+      summary: Update car identified by the given Id
+      tags:
+      - cars
+swagger: "2.0"
