@@ -73,6 +73,8 @@ func main() {
 
 		fmt.Println(resp.Status)
 		fmt.Println(string(body))
+		fmt.Println("status water : ", data.StatusWater)
+		fmt.Println("status wind : ", data.StatusWind)
 
 		time.Sleep(15 * time.Second)
 	}
