@@ -12,6 +12,38 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetProducts(c *gin.Context) {
+	db := database.GetDB()
+	products := []models.Product{}
+	userData := c.MustGet("userData").(jwt.MapClaims)
+	userID := uint(userData["id"].(float64))
+
+	if userData["role"] == "admin" {
+		err := db.Find(&products).Error
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"err":     "Bad Request",
+				"message": err.Error(),
+			})
+		}
+
+		c.JSON(http.StatusOK, products)
+		return
+	}
+
+	err := db.Where("user_id = ?", userID).Find(&products).Error
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"err":     "Bad Request",
+			"message": err.Error(),
+		})
+	}
+
+	c.JSON(http.StatusOK, products)
+}
+
 func CreateProduct(c *gin.Context) {
 	db := database.GetDB()
 	userData := c.MustGet("userData").(jwt.MapClaims)
@@ -80,7 +112,10 @@ func GetProduct(c *gin.Context) {
 	err := db.First(&Product, "id = ?", productId).Error
 
 	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"err":     "Bad Request",
+			"message": err.Error(),
+		})
 		return
 	}
 
@@ -95,7 +130,10 @@ func DeleteProduct(c *gin.Context) {
 	err := db.Where("id = ?", productId).Delete(&Product).Error
 
 	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"err":     "Bad Request",
+			"message": err.Error(),
+		})
 		return
 	}
 
