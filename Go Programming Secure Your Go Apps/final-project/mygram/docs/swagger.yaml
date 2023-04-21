@@ -1,0 +1,789 @@
+basePath: /
+definitions:
+  helpers.APIError:
+    properties:
+      error:
+        type: string
+      message:
+        type: string
+    type: object
+  helpers.CommentInput:
+    properties:
+      message:
+        type: string
+      photo_id:
+        type: integer
+    type: object
+  helpers.DeleteResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  helpers.LoginInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  helpers.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  helpers.PhotoInput:
+    properties:
+      caption:
+        type: string
+      photo_url:
+        type: string
+      title:
+        type: string
+    type: object
+  helpers.RegisterInput:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  helpers.RegisterResponse:
+    properties:
+      age:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+  helpers.SocialMediaInput:
+    properties:
+      name:
+        type: string
+      social_media_url:
+        type: string
+    type: object
+  models.Comment:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      photo:
+        $ref: '#/definitions/models.Photo'
+      photo_id:
+        type: integer
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+      userID:
+        type: integer
+    type: object
+  models.Photo:
+    properties:
+      caption:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      photo_url:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+      userID:
+        type: integer
+    type: object
+  models.SocialMedia:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      social_media_url:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+      userID:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      age:
+        type: integer
+      comments:
+        items:
+          $ref: '#/definitions/models.Comment'
+        type: array
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      photos:
+        items:
+          $ref: '#/definitions/models.Photo'
+        type: array
+      social_media:
+        items:
+          $ref: '#/definitions/models.SocialMedia'
+        type: array
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: soberkoder@swagger.io
+    name: API Support
+  description: This is a sample service for managing cars
+  termsOfService: http://swagger.io/terms/
+  title: MyGram API
+  version: "1.0"
+paths:
+  /comments:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all comments
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Comment'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Get details
+      tags:
+      - Comments
+    post:
+      consumes:
+      - application/json
+      description: Post details of comment corresponding to the input Id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: create comment
+        in: body
+        name: helpers.CommentInput
+        required: true
+        schema:
+          $ref: '#/definitions/helpers.CommentInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Post details for a given Id
+      tags:
+      - Comments
+  /comments/{commentId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete the order corresponding to the input id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the comment to be deleted
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.DeleteResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Delete comment identified by the given id
+      tags:
+      - Comments
+    get:
+      consumes:
+      - application/json
+      description: Get details comment corresponding to the input Id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the comment
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Get details for a given Id
+      tags:
+      - Comments
+    put:
+      consumes:
+      - application/json
+      description: Update the comment corresponding to the input Id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the comment to be updated
+        in: path
+        name: commentId
+        required: true
+        type: integer
+      - description: update comment
+        in: body
+        name: helpers.CommentInput
+        required: true
+        schema:
+          $ref: '#/definitions/helpers.CommentInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Comment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Update comment identified by the given Id
+      tags:
+      - Comments
+  /photos:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all photos
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Photo'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Get details
+      tags:
+      - Photos
+    post:
+      consumes:
+      - application/json
+      description: Post details of photo corresponding to the input Id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: create photo
+        in: body
+        name: helpers.PhotoInput
+        required: true
+        schema:
+          $ref: '#/definitions/helpers.PhotoInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Photo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Post details for a given Id
+      tags:
+      - Photos
+  /photos/{photoId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete the order corresponding to the input id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the photo to be deleted
+        in: path
+        name: photoId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.DeleteResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Delete photo identified by the given id
+      tags:
+      - Photos
+    get:
+      consumes:
+      - application/json
+      description: Get details photo corresponding to the input Id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the photo
+        in: path
+        name: photoId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Photo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Get details for a given Id
+      tags:
+      - Photos
+    put:
+      consumes:
+      - application/json
+      description: Update the photo corresponding to the input Id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the photo to be updated
+        in: path
+        name: photoId
+        required: true
+        type: integer
+      - description: update photo
+        in: body
+        name: helpers.PhotoInput
+        required: true
+        schema:
+          $ref: '#/definitions/helpers.PhotoInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Photo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Update photo identified by the given Id
+      tags:
+      - Photos
+  /socialmedia:
+    get:
+      consumes:
+      - application/json
+      description: Get details of all social media
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SocialMedia'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Get details
+      tags:
+      - Social Media
+    post:
+      consumes:
+      - application/json
+      description: Post details of social media corresponding to the input Id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: create social media
+        in: body
+        name: helpers.SocialMediaInput
+        required: true
+        schema:
+          $ref: '#/definitions/helpers.SocialMediaInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.SocialMedia'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Post details for a given Id
+      tags:
+      - Social Media
+  /socialmedia/{socialmediaId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete the order corresponding to the input id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the social media to be deleted
+        in: path
+        name: socialmediaId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.DeleteResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Delete social media identified by the given id
+      tags:
+      - Social Media
+    get:
+      consumes:
+      - application/json
+      description: Get details social media corresponding to the input Id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the social media
+        in: path
+        name: socialmediaId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SocialMedia'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Get details for a given Id
+      tags:
+      - Social Media
+    put:
+      consumes:
+      - application/json
+      description: Update the social media corresponding to the input Id
+      parameters:
+      - description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID of the social media to be updated
+        in: path
+        name: socialmediaId
+        required: true
+        type: integer
+      - description: update social media
+        in: body
+        name: helpers.SocialMediaInput
+        required: true
+        schema:
+          $ref: '#/definitions/helpers.SocialMediaInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SocialMedia'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      security:
+      - BearerAuth: []
+      summary: Update social media identified by the given Id
+      tags:
+      - Social Media
+  /users/login:
+    post:
+      parameters:
+      - description: User Login
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/helpers.LoginInput'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      summary: login a user
+      tags:
+      - Users
+  /users/register:
+    post:
+      parameters:
+      - description: User Register
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/helpers.RegisterInput'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/helpers.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+        "500":
+          description: Server Error
+          schema:
+            $ref: '#/definitions/helpers.APIError'
+      summary: create a user
+      tags:
+      - Users
+swagger: "2.0"
